@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getTodos, createTodo, updateTodo, toggleTodo, deleteTodo } from "@/api/axios";
-import { CreateTaskData, UpdateTaskData } from "@/types/todo";
+import { CreateTaskData, UpdateTaskData, ITask } from "@/types/todo";
 
 export const useTodos = () => {
   const queryClient = useQueryClient();
@@ -28,7 +28,7 @@ export const useTodos = () => {
       return updateTodo(id, data);
     },
     onSuccess: (updatedTodo) => {
-      queryClient.setQueryData(['todos'], (oldTodos: any[]) => {
+      queryClient.setQueryData(['todos'], (oldTodos: ITask[]) => {
         return oldTodos.map(todo => 
           todo.id === updatedTodo.id 
             ? { ...todo, title: updatedTodo.title }
@@ -46,7 +46,7 @@ export const useTodos = () => {
     mutationFn: toggleTodo,
     onSuccess: (toggledTodo) => {
       // Update cache with the returned data
-      queryClient.setQueryData(['todos'], (oldTodos: any[]) => {
+      queryClient.setQueryData(['todos'], (oldTodos: ITask[]) => {
         return oldTodos.map(todo => 
           todo.id === toggledTodo.id 
             ? { ...todo, completed: toggledTodo.completed }
